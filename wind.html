@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>鹈鹕骑自行车 2D 动画</title>
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(180deg, #bbf2f6 0%, #e0f7fa 45%, #fef3c7 70%, #dcfce7 85%, #86efac 100%);
+      --card-bg: rgba(255, 255, 255, 0.75);
+      --card-border: rgba(255, 255, 255, 0.9);
+      --card-shadow: 0 20px 45px rgba(0, 0, 0, 0.08);
+      --text-main: #1e293b;
+      --text-sub: #64748b;
+      --sun-moon-fill: #f59e0b;
+      --sun-glow: rgba(245, 158, 11, 0.35);
+      --road-color: #94a3b8;
+      --road-line: #f8fafc;
+      --tree-trunk: #854d0e;
+      --tree-crown: #22c55e;
+      --toggle-bg: #e2e8f0;
+      --toggle-knob: #0f172a;
+    }
+
+    [data-theme="dark"] {
+      --bg-gradient: linear-gradient(180deg, #090d16 0%, #0f172a 40%, #1e1b4b 70%, #14232c 88%, #0f2425 100%);
+      --card-bg: rgba(15, 23, 42, 0.7);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --card-shadow: 0 20px 45px rgba(0, 0, 0, 0.45);
+      --text-main: #f8fafc;
+      --text-sub: #94a3b8;
+      --sun-moon-fill: #f1f5f9;
+      --sun-glow: rgba(241, 245, 249, 0.25);
+      --road-color: #334155;
+      --road-line: #cbd5e1;
+      --tree-trunk: #451a03;
+      --tree-crown: #15803d;
+      --toggle-bg: #334155;
+      --toggle-knob: #38bdf8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-gradient);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: var(--text-main);
+      transition: background 0.6s ease, color 0.4s ease;
+      overflow: hidden;
+      padding: 20px;
+    }
+
+    .container {
+      position: relative;
+      width: 100%;
+      max-width: 960px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      backdrop-filter: blur(12px);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      box-shadow: var(--card-shadow);
+      transition: background 0.4s, border-color 0.4s;
+    }
+
+    .title-group h1 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .title-group p {
+      font-size: 0.85rem;
+      color: var(--text-sub);
+      margin-top: 2px;
+    }
+
+    .theme-toggle-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--toggle-bg);
+      color: var(--text-main);
+      border: none;
+      padding: 8px 14px;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .theme-toggle-btn:hover {
+      transform: scale(1.05);
+    }
+
+    .scene-card {
+      width: 100%;
+      position: relative;
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid var(--card-border);
+      box-shadow: var(--card-shadow);
+      backdrop-filter: blur(8px);
+      background: var(--card-bg);
+    }
+
+    svg.scene {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* 动画定义 */
+    @keyframes wheelRotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes pedalRotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes bikeBob {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-4px) rotate(-0.5deg); }
+    }
+
+    @keyframes pelicanBob {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-7px) rotate(1.2deg); }
+    }
+
+    @keyframes pelicanBlink {
+      0%, 94%, 98%, 100% { transform: scaleY(1); }
+      96% { transform: scaleY(0.1); }
+    }
+
+    @keyframes pouchWobble {
+      0%, 100% { transform: rotate(0deg) skewX(0deg); }
+      50% { transform: rotate(-3deg) skewX(-2deg); }
+    }
+
+    @keyframes scarfWave {
+      0%, 100% { transform: rotate(0deg) scaleX(1); }
+      50% { transform: rotate(-8deg) scaleX(1.15) translateY(-3px); }
+    }
+
+    @keyframes scrollLayer1 {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-1000px); }
+    }
+
+    @keyframes scrollLayer2 {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-1000px); }
+    }
+
+    @keyframes scrollRoadLines {
+      0% { stroke-dashoffset: 0; }
+      100% { stroke-dashoffset: -120; }
+    }
+
+    @keyframes sunGlowPulse {
+      0%, 100% { opacity: 0.4; transform: scale(1); }
+      50% { opacity: 0.75; transform: scale(1.08); }
+    }
+
+    /* 绑定动画类 */
+    .anim-wheel {
+      transform-origin: center;
+      animation: wheelRotate 0.85s linear infinite;
+    }
+
+    .anim-bike-body {
+      animation: bikeBob 0.85s ease-in-out infinite;
+      transform-origin: 350px 380px;
+    }
+
+    .anim-pelican-rider {
+      animation: pelicanBob 0.85s ease-in-out infinite;
+      transform-origin: 320px 240px;
+    }
+
+    .anim-crank {
+      transform-origin: 350px 390px;
+      animation: pedalRotate 0.85s linear infinite;
+    }
+
+    .anim-pouch {
+      transform-origin: 410px 170px;
+      animation: pouchWobble 0.85s ease-in-out infinite;
+    }
+
+    .anim-eye {
+      transform-origin: 395px 145px;
+      animation: pelicanBlink 4s ease-in-out infinite;
+    }
+
+    .anim-scarf {
+      transform-origin: 330px 200px;
+      animation: scarfWave 0.42s ease-in-out infinite;
+    }
+
+    .anim-road-dash {
+      stroke-dasharray: 40 40;
+      animation: scrollRoadLines 0.5s linear infinite;
+    }
+
+    .anim-mountains-back {
+      animation: scrollLayer1 22s linear infinite;
+    }
+
+    .anim-trees-front {
+      animation: scrollLayer2 7s linear infinite;
+    }
+
+    .anim-celestial-glow {
+      transform-origin: 120px 90px;
+      animation: sunGlowPulse 4s ease-in-out infinite;
+    }
+
+    .controls-hint {
+      font-size: 0.8rem;
+      color: var(--text-sub);
+    }
+
+    .collection-home {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--toggle-bg);
+      color: var(--text-main);
+      text-decoration: none;
+      flex: none;
+    }
+
+    html[data-embed="1"] .header,
+    html[data-embed="1"] .controls-hint {
+      display: none !important;
+    }
+  </style>
+  <script>if(new URLSearchParams(location.search).has('embed'))document.documentElement.setAttribute('data-embed','1')</script>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="header-left">
+      <a class="collection-home" href="./index.html" aria-label="鹈鹕合集" title="鹈鹕合集"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></a>
+      <div class="title-group">
+        <h1>鹈鹕破风骑行</h1>
+        <p>纯 SVG 原生 CSS 动画 • 支持昼夜交替模式</p>
+      </div>
+      </div>
+      <button class="theme-toggle-btn" id="themeToggle" aria-label="切换昼夜主题">
+        <span id="themeIcon">🌙</span>
+        <span id="themeText">夜间模式</span>
+      </button>
+    </header>
+
+    <div class="scene-card">
+      <svg class="scene" viewBox="0 0 1000 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <!-- 太阳/月亮渐变 -->
+          <radialGradient id="sunGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#fef08a"/>
+            <stop offset="60%" stop-color="var(--sun-moon-fill)"/>
+            <stop offset="100%" stop-color="var(--sun-moon-fill)" stop-opacity="0.85"/>
+          </radialGradient>
+
+          <!-- 鹈鹕大嘴袋渐变 -->
+          <linearGradient id="pouchGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#fdba74"/>
+            <stop offset="100%" stop-color="#ea580c"/>
+          </linearGradient>
+
+          <!-- 羽毛身体质感渐变 -->
+          <linearGradient id="featherGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#ffffff"/>
+            <stop offset="85%" stop-color="#e2e8f0"/>
+            <stop offset="100%" stop-color="#cbd5e1"/>
+          </linearGradient>
+
+          <!-- 车轮辐条单元模板 -->
+          <g id="wheelUnit">
+            <!-- 轮圈与外胎 -->
+            <circle cx="0" cy="0" r="54" stroke="#020617" stroke-width="12" fill="none"/>
+            <circle cx="0" cy="0" r="48" stroke="#cbd5e1" stroke-width="4" fill="none"/>
+            <!-- 8条轮辐 -->
+            <line x1="0" y1="-46" x2="0" y2="46" stroke="#94a3b8" stroke-width="2.5"/>
+            <line x1="-46" y1="0" x2="46" y2="0" stroke="#94a3b8" stroke-width="2.5"/>
+            <line x1="-32" y1="-32" x2="32" y2="32" stroke="#94a3b8" stroke-width="2.5"/>
+            <line x1="-32" y1="32" x2="32" y2="-32" stroke="#94a3b8" stroke-width="2.5"/>
+            <!-- 花鼓轴心 -->
+            <circle cx="0" cy="0" r="10" fill="#334155" stroke="#f8fafc" stroke-width="2"/>
+          </g>
+
+          <!-- 背景树木模板 -->
+          <g id="forestTree">
+            <rect x="14" y="55" width="12" height="45" rx="3" fill="var(--tree-trunk)"/>
+            <polygon points="20,8 38,40 2,40" fill="var(--tree-crown)" opacity="0.9"/>
+            <polygon points="20,24 35,58 5,58" fill="var(--tree-crown)"/>
+          </g>
+
+          <!-- 背景灌木丛 -->
+          <g id="bushCluster">
+            <ellipse cx="20" cy="20" rx="20" ry="14" fill="var(--tree-crown)" opacity="0.8"/>
+            <ellipse cx="36" cy="18" rx="14" ry="10" fill="var(--tree-crown)"/>
+            <ellipse cx="6" cy="22" rx="12" ry="9" fill="var(--tree-crown)" opacity="0.9"/>
+          </g>
+        </defs>
+
+        <!-- 天体（太阳/月亮） -->
+        <g id="celestial">
+          <circle class="anim-celestial-glow" cx="130" cy="90" r="62" fill="var(--sun-glow)"/>
+          <circle cx="130" cy="90" r="38" fill="url(#sunGrad)"/>
+          <!-- 拟真月坑/高光斑 -->
+          <circle cx="120" cy="80" r="7" fill="#ffffff" opacity="0.25"/>
+          <circle cx="140" cy="98" r="10" fill="#ffffff" opacity="0.2"/>
+        </g>
+
+        <!-- 远景：连绵山峰（双倍无缝平移） -->
+        <g class="anim-mountains-back" opacity="0.45">
+          <!-- 模块 1 -->
+          <path d="M-50,420 L150,220 L320,360 L520,180 L730,370 L920,250 L1080,420 Z" fill="#64748b"/>
+          <path d="M520,180 L560,240 L480,240 Z" fill="#f8fafc" opacity="0.8"/>
+          <path d="M150,220 L180,265 L120,265 Z" fill="#f8fafc" opacity="0.8"/>
+          <!-- 模块 2 (平移1000px衔接) -->
+          <path d="M950,420 L1150,220 L1320,360 L1520,180 L1730,370 L1920,250 L2080,420 Z" fill="#64748b"/>
+          <path d="M1520,180 L1560,240 L1480,240 Z" fill="#f8fafc" opacity="0.8"/>
+          <path d="M1150,220 L1180,265 L1120,265 Z" fill="#f8fafc" opacity="0.8"/>
+        </g>
+
+        <!-- 中近景：滚动的树木与草丛（双倍无缝平移） -->
+        <g class="anim-trees-front">
+          <!-- 模块 1 -->
+          <use href="#forestTree" x="80" y="320"/>
+          <use href="#bushCluster" x="220" y="380"/>
+          <use href="#forestTree" x="400" y="320" transform="scale(1.15) translate(-40,-20)"/>
+          <use href="#bushCluster" x="610" y="375"/>
+          <use href="#forestTree" x="780" y="315"/>
+          <use href="#bushCluster" x="910" y="385"/>
+
+          <!-- 模块 2 (平移1000px衔接) -->
+          <use href="#forestTree" x="1080" y="320"/>
+          <use href="#bushCluster" x="1220" y="380"/>
+          <use href="#forestTree" x="1400" y="320" transform="scale(1.15) translate(-40,-20)"/>
+          <use href="#bushCluster" x="1610" y="375"/>
+          <use href="#forestTree" x="1780" y="315"/>
+          <use href="#bushCluster" x="1910" y="385"/>
+        </g>
+
+        <!-- 地面与跑道 -->
+        <g id="road">
+          <!-- 路基 -->
+          <rect x="0" y="415" width="1000" height="105" fill="var(--road-color)"/>
+          <!-- 草坪路沿边线 -->
+          <rect x="0" y="415" width="1000" height="9" fill="#10b981"/>
+          <!-- 滚动虚线 -->
+          <line class="anim-road-dash" x1="-100" y1="465" x2="1100" y2="465" stroke="var(--road-line)" stroke-width="7" stroke-linecap="round"/>
+        </g>
+
+        <!-- 阴影层（自行车与水鸟） -->
+        <g id="shadows" opacity="0.4">
+          <ellipse cx="230" cy="450" rx="55" ry="12" fill="#0f172a"/>
+          <ellipse cx="490" cy="450" rx="55" ry="12" fill="#0f172a"/>
+          <ellipse cx="360" cy="452" rx="75" ry="14" fill="#0f172a"/>
+        </g>
+
+        <!-- 主体：自行车与鹈鹕组合 -->
+        <g id="bicycleAndRider">
+          <!-- 1. 后轮 (中心: 230, 395) -->
+          <g transform="translate(230, 395)">
+            <g class="anim-wheel">
+              <use href="#wheelUnit"/>
+            </g>
+          </g>
+
+          <!-- 2. 前轮 (中心: 490, 395) -->
+          <g transform="translate(490, 395)">
+            <g class="anim-wheel">
+              <use href="#wheelUnit"/>
+            </g>
+          </g>
+
+          <!-- 3. 自行车车架与传动总成 (随车身轻微颠簸) -->
+          <g class="anim-bike-body">
+            <!-- 链条 -->
+            <polygon points="230,395 350,380 350,402 230,397" fill="none" stroke="#64748b" stroke-width="3" stroke-linejoin="round"/>
+
+            <!-- 车架骨架 (竞速几何钻石车架 - 活力珊瑚橙红) -->
+            <!-- 后下叉 -->
+            <line x1="230" y1="395" x2="350" y2="390" stroke="#f97316" stroke-width="11" stroke-linecap="round"/>
+            <!-- 后上叉 -->
+            <line x1="230" y1="395" x2="310" y2="295" stroke="#f97316" stroke-width="10" stroke-linecap="round"/>
+            <!-- 立管 (中轴 -> 坐垫) -->
+            <line x1="350" y1="390" x2="305" y2="275" stroke="#ea580c" stroke-width="11" stroke-linecap="round"/>
+            <!-- 下管 (中轴 -> 车头头管) -->
+            <line x1="350" y1="390" x2="450" y2="270" stroke="#f97316" stroke-width="12" stroke-linecap="round"/>
+            <!-- 上管 (坐管处 -> 车头头管) -->
+            <line x1="310" y1="295" x2="450" y2="270" stroke="#fb923c" stroke-width="10" stroke-linecap="round"/>
+            <!-- 前叉 (前轮轴 -> 车头) -->
+            <line x1="490" y1="395" x2="450" y2="270" stroke="#ea580c" stroke-width="10" stroke-linecap="round"/>
+
+            <!-- 车头把立与弯把 -->
+            <path d="M450,270 L460,232 L492,238 C505,242 505,268 485,270" fill="none" stroke="#334155" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+
+            <!-- 舒适坐垫 -->
+            <path d="M280,270 C280,265 300,262 335,264 C342,265 342,273 330,275 L285,275 Z" fill="#0f172a"/>
+
+            <!-- 牙盘中轴盘 -->
+            <circle cx="350" cy="390" r="21" fill="#475569" stroke="#cbd5e1" stroke-width="3.5"/>
+          </g>
+
+          <!-- 4. 鹈鹕主体 (自然骑行起伏) -->
+          <g class="anim-pelican-rider">
+            <!-- 灵动尾羽 -->
+            <path d="M245,285 C230,275 220,290 205,288 C215,302 235,308 255,300 Z" fill="#94a3b8"/>
+            <path d="M250,290 C235,285 228,298 215,300 C226,312 245,316 260,306 Z" fill="#cbd5e1"/>
+
+            <!-- 肥嘟嘟圆润鸟身 -->
+            <ellipse cx="310" cy="270" rx="60" ry="50" fill="url(#featherGrad)"/>
+
+            <!-- 粗壮优雅的长脖颈 -->
+            <path d="M338,245 C352,205 348,160 375,142 C385,136 398,145 390,165 C380,195 365,230 358,255 Z" fill="url(#featherGrad)"/>
+
+            <!-- 鹈鹕头部 -->
+            <circle cx="388" cy="146" r="25" fill="#f8fafc"/>
+
+            <!-- 帅气防风骑行头盔 (佩戴在头顶) -->
+            <path d="M362,142 C362,118 395,112 414,130 C410,135 395,138 362,142 Z" fill="#ef4444"/>
+            <path d="M368,136 C382,122 406,122 414,130" stroke="#fca5a5" stroke-width="3" fill="none"/>
+
+            <!-- 眼睛与灵动眨眼 -->
+            <g class="anim-eye">
+              <ellipse cx="395" cy="145" rx="6.5" ry="7" fill="#ffffff" stroke="#334155" stroke-width="1.5"/>
+              <circle cx="397" cy="144" r="3.5" fill="#0f172a"/>
+              <circle cx="398.5" cy="142" r="1.5" fill="#ffffff"/>
+            </g>
+
+            <!-- 标志性鹈鹕巨型大嘴与喉囊 -->
+            <!-- 上喙（坚硬修长） -->
+            <path d="M396,144 C425,148 475,153 505,158 C507,163 496,167 470,167 L398,162 Z" fill="#f59e0b" stroke="#d97706" stroke-width="1.5"/>
+            <!-- 喙尖倒钩小角 -->
+            <path d="M504,158 Q508,160 503,165" stroke="#b45309" stroke-width="2.5" fill="none"/>
+            <!-- 弹性大喉囊 (Q弹晃动) -->
+            <path class="anim-pouch" d="M400,162 Q450,215 480,166 C445,176 415,172 400,162 Z" fill="url(#pouchGrad)" opacity="0.95"/>
+
+            <!-- 潇洒迎风飘舞的红围巾 -->
+            <rect x="345" y="196" width="34" height="15" rx="7" fill="#dc2626"/>
+            <g class="anim-scarf">
+              <path d="M350,205 C310,205 270,190 240,202 C268,214 300,218 350,214 Z" fill="#ef4444"/>
+              <path d="M350,208 C320,212 285,202 255,220 C280,228 315,225 350,214 Z" fill="#b91c1c"/>
+            </g>
+
+            <!-- 鸟翅膀（手握自行车车把） -->
+            <path d="M315,250 C345,240 420,225 485,242 C488,247 480,256 465,254 C415,248 350,270 310,275 Z" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1.5"/>
+            <path d="M480,242 C486,244 492,250 484,256" stroke="#f59e0b" stroke-width="4" stroke-linecap="round" fill="none"/>
+          </g>
+
+          <!-- 5. 联动曲柄、脚踏与大黄脚掌 (转动循环) -->
+          <g class="anim-crank">
+            <!-- 右曲柄杆 -->
+            <line x1="350" y1="390" x2="385" y2="425" stroke="#cbd5e1" stroke-width="6" stroke-linecap="round"/>
+            <!-- 脚踏板 -->
+            <line x1="375" y1="425" x2="395" y2="425" stroke="#1e293b" stroke-width="6" stroke-linecap="round"/>
+            <!-- 鹈鹕金黄大蹼足踩踏板 -->
+            <ellipse cx="385" cy="423" rx="14" ry="6" fill="#f59e0b"/>
+            <path d="M375,423 L398,421 L396,427 Z" fill="#d97706"/>
+
+            <!-- 腿部连杆 (臀部 -> 脚踏) -->
+            <path d="M325,295 Q360,375 385,423" stroke="#f59e0b" stroke-width="8" stroke-linecap="round" fill="none"/>
+
+            <!-- 左曲柄杆（反向180度增强立体感） -->
+            <line x1="350" y1="390" x2="315" y2="355" stroke="#64748b" stroke-width="5" stroke-linecap="round" opacity="0.6"/>
+            <line x1="305" y1="355" x2="325" y2="355" stroke="#0f172a" stroke-width="5" stroke-linecap="round" opacity="0.6"/>
+          </g>
+
+          <!-- 速度气流线条 (增添破风感) -->
+          <g opacity="0.75">
+            <line x1="140" y1="210" x2="210" y2="210" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+            <line x1="100" y1="240" x2="185" y2="240" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+            <line x1="120" y1="330" x2="190" y2="330" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+            <line x1="530" y1="170" x2="570" y2="170" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+          </g>
+        </g>
+      </svg>
+    </div>
+
+    <div class="controls-hint">
+      提示：点击右上角按钮可无缝切换昼夜配色与光影效果
+    </div>
+  </div>
+
+  <script>
+    const themeBtn = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const themeText = document.getElementById('themeText');
+    const htmlEl = document.documentElement;
+
+    let isDark = false;
+
+    // 检测系统深色模式偏好
+    if (htmlEl.getAttribute('data-embed') !== '1' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      setDarkTheme(true);
+    }
+
+    function setDarkTheme(dark) {
+      isDark = dark;
+      if (isDark) {
+        htmlEl.setAttribute('data-theme', 'dark');
+        themeIcon.textContent = '☀️';
+        themeText.textContent = '白昼模式';
+      } else {
+        htmlEl.removeAttribute('data-theme');
+        themeIcon.textContent = '🌙';
+        themeText.textContent = '夜间模式';
+      }
+    }
+
+    themeBtn.addEventListener('click', () => {
+      setDarkTheme(!isDark);
+    });
+  </script>
+</body>
+</html>

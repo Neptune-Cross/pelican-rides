@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>鹈鹕骑自行车动画</title>
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(180deg, #87CEEB 0%, #E0F6FF 65%, #90EE90 65%, #55a630 100%);
+      --sun-color: #FFA500;
+      --sun-glow: rgba(255, 165, 0, 0.3);
+      --road-color: #555;
+      --road-line: #f1f1f1;
+      --text-color: #2b2d42;
+      --card-bg: rgba(255, 255, 255, 0.85);
+      --toggle-btn-bg: #2b2d42;
+      --toggle-btn-text: #fff;
+    }
+
+    [data-theme="dark"] {
+      --bg-gradient: linear-gradient(180deg, #0b192c 0%, #1e3e62 65%, #183a27 65%, #0d2818 100%);
+      --sun-color: #f4e04d;
+      --sun-glow: rgba(244, 224, 77, 0.2);
+      --road-color: #222;
+      --road-line: #888;
+      --text-color: #f4f4f9;
+      --card-bg: rgba(20, 25, 40, 0.85);
+      --toggle-btn-bg: #f4f4f9;
+      --toggle-btn-text: #1a1a2e;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-gradient);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: var(--text-color);
+      transition: background 0.5s ease, color 0.5s ease;
+      overflow: hidden;
+    }
+
+    .header-panel {
+      position: absolute;
+      top: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--card-bg);
+      backdrop-filter: blur(8px);
+      padding: 10px 24px;
+      border-radius: 999px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      z-index: 10;
+    }
+
+    .title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .theme-toggle-btn {
+      background: var(--toggle-btn-bg);
+      color: var(--toggle-btn-text);
+      border: none;
+      padding: 6px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .theme-toggle-btn:hover {
+      transform: scale(1.05);
+    }
+
+    .canvas-container {
+      width: 95vw;
+      max-width: 900px;
+      height: 550px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    /* 动画定义 */
+    @keyframes wheelRotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes pedalRotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes pedalReverse {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(-360deg); }
+    }
+
+    @keyframes pelicanBob {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-7px) rotate(-1.5deg); }
+    }
+
+    @keyframes beakChomp {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(4deg); }
+    }
+
+    @keyframes roadDash {
+      from { stroke-dashoffset: 0; }
+      to { stroke-dashoffset: -120; }
+    }
+
+    @keyframes cloudMove {
+      from { transform: translateX(950px); }
+      to { transform: translateX(-250px); }
+    }
+
+    @keyframes grassMove {
+      from { transform: translateX(0); }
+      to { transform: translateX(-80px); }
+    }
+
+    @keyframes tailWag {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(-10deg); }
+    }
+
+    /* 样式与绑定 */
+    .road-line {
+      stroke-dasharray: 40 20;
+      animation: roadDash 0.8s linear infinite;
+    }
+
+    .wheel-rotate {
+      transform-origin: center;
+      animation: wheelRotate 1.2s linear infinite;
+    }
+
+    .pelican-body-group {
+      transform-origin: 390px 300px;
+      animation: pelicanBob 0.6s ease-in-out infinite;
+    }
+
+    .pelican-beak-lower {
+      transform-origin: 470px 185px;
+      animation: beakChomp 1.2s ease-in-out infinite;
+    }
+
+    .pelican-tail {
+      transform-origin: 290px 285px;
+      animation: tailWag 0.6s ease-in-out infinite;
+    }
+
+    .crank-rotate {
+      transform-origin: 390px 390px;
+      animation: pedalRotate 1.2s linear infinite;
+    }
+
+    .pedal-keep-level {
+      transform-origin: center;
+      animation: pedalReverse 1.2s linear infinite;
+    }
+
+    .cloud-fast {
+      animation: cloudMove 18s linear infinite;
+    }
+
+    .cloud-slow {
+      animation: cloudMove 32s linear infinite -10s;
+    }
+
+    .grass-scroll {
+      animation: grassMove 1.2s linear infinite;
+    }
+
+    .collection-home {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--toggle-btn-bg);
+      color: var(--toggle-btn-text);
+      text-decoration: none;
+      flex: none;
+    }
+
+    html[data-embed="1"] .header-panel {
+      display: none !important;
+    }
+  </style>
+  <script>if(new URLSearchParams(location.search).has('embed'))document.documentElement.setAttribute('data-embed','1')</script>
+</head>
+<body>
+  <div class="header-panel">
+    <a class="collection-home" href="./index.html" aria-label="鹈鹕合集" title="鹈鹕合集"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></a>
+    <span class="title">鹈鹕漫游记</span>
+    <button class="theme-toggle-btn" id="themeToggle">🌓 切换模式</button>
+  </div>
+
+  <div class="canvas-container">
+    <svg viewBox="0 0 900 550" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <!-- 太阳渐变 -->
+        <radialGradient id="sunGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#FFF7B2" />
+          <stop offset="70%" stop-color="var(--sun-color)" />
+          <stop offset="100%" stop-color="var(--sun-glow)" stop-opacity="0" />
+        </radialGradient>
+
+        <!-- 车轮金属渐变 -->
+        <linearGradient id="rimGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#adb5bd" />
+          <stop offset="50%" stop-color="#f8f9fa" />
+          <stop offset="100%" stop-color="#495057" />
+        </linearGradient>
+
+        <!-- 自行车车架渐变 -->
+        <linearGradient id="frameGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#e63946" />
+          <stop offset="100%" stop-color="#d62828" />
+        </linearGradient>
+
+        <!-- 鹈鹕喉囊渐变 -->
+        <linearGradient id="pouchGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#ffb703" />
+          <stop offset="100%" stop-color="#fb8500" />
+        </linearGradient>
+
+        <!-- 轮子模板 -->
+        <g id="bicycle-wheel">
+          <!-- 轮胎外圈 -->
+          <circle cx="0" cy="0" r="60" fill="none" stroke="#212529" stroke-width="12" />
+          <!-- 轮辋 -->
+          <circle cx="0" cy="0" r="54" fill="none" stroke="url(#rimGrad)" stroke-width="3" />
+          <!-- 轮辐 (8组辐条) -->
+          <line x1="0" y1="-54" x2="0" y2="54" stroke="#ced4da" stroke-width="2" />
+          <line x1="-54" y1="0" x2="54" y2="0" stroke="#ced4da" stroke-width="2" />
+          <line x1="-38.2" y1="-38.2" x2="38.2" y2="38.2" stroke="#ced4da" stroke-width="2" />
+          <line x1="38.2" y1="-38.2" x2="-38.2" y2="38.2" stroke="#ced4da" stroke-width="2" />
+          <line x1="-18" y1="-51" x2="18" y2="51" stroke="#ced4da" stroke-width="1.5" />
+          <line x1="18" y1="-51" x2="-18" y2="51" stroke="#ced4da" stroke-width="1.5" />
+          <line x1="-51" y1="-18" x2="51" y2="18" stroke="#ced4da" stroke-width="1.5" />
+          <line x1="51" y1="-18" x2="-51" y2="18" stroke="#ced4da" stroke-width="1.5" />
+          <!-- 轴心 -->
+          <circle cx="0" cy="0" r="10" fill="#343a40" />
+          <circle cx="0" cy="0" r="4" fill="#f8f9fa" />
+        </g>
+      </defs>
+
+      <!-- 远景：太阳/月亮 -->
+      <circle cx="750" cy="110" r="65" fill="url(#sunGrad)" />
+
+      <!-- 云朵背景 -->
+      <g class="cloud-slow" fill="#ffffff" opacity="0.8">
+        <path d="M 50 120 q 20 -30 50 -10 q 30 -25 60 0 q 30 -10 40 20 q -10 20 -40 20 l -90 0 q -30 0 -20 -30 z" />
+      </g>
+      <g class="cloud-fast" fill="#ffffff" opacity="0.9">
+        <path d="M 200 70 q 15 -25 40 -10 q 25 -20 50 0 q 25 -10 35 15 q -10 20 -35 15 l -70 0 q -25 0 -20 -20 z" />
+      </g>
+
+      <!-- 远景树木/草丘 -->
+      <path d="M-50 370 Q 150 340 350 370 T 750 370 T 1000 370 L 1000 450 L -50 450 Z" fill="#38b000" opacity="0.4" />
+      <path d="M-50 380 Q 200 350 450 380 T 950 380 L 950 450 L -50 450 Z" fill="#2d6a4f" opacity="0.6" />
+
+      <!-- 道路 -->
+      <rect x="0" y="415" width="900" height="135" fill="var(--road-color)" />
+      <!-- 道路斑马线 / 虚线 -->
+      <line x1="-50" y1="475" x2="950" y2="475" stroke="var(--road-line)" stroke-width="7" class="road-line" />
+      <!-- 路边小石子与草丛动效 -->
+      <g class="grass-scroll" fill="#2d6a4f">
+        <circle cx="50" cy="413" r="4" fill="#a0aab2" />
+        <circle cx="180" cy="412" r="3" fill="#8d99ae" />
+        <circle cx="340" cy="414" r="5" fill="#a0aab2" />
+        <circle cx="520" cy="412" r="3.5" fill="#8d99ae" />
+        <circle cx="700" cy="413" r="4" fill="#a0aab2" />
+        <circle cx="860" cy="414" r="5" fill="#8d99ae" />
+      </g>
+
+      <!-- ========== 自行车与骑手组合主体 ========== -->
+      <g id="bike-and-pelican">
+        <!-- 后轮 (X: 250, Y: 400) -->
+        <g transform="translate(250, 400)">
+          <use href="#bicycle-wheel" class="wheel-rotate" />
+        </g>
+
+        <!-- 前轮 (X: 530, Y: 400) -->
+        <g transform="translate(530, 400)">
+          <use href="#bicycle-wheel" class="wheel-rotate" />
+        </g>
+
+        <!-- 自行车车架结构 -->
+        <!-- 后下叉: 后轮(250,400) 到 中轴五通(390,390) -->
+        <line x1="250" y1="400" x2="390" y2="390" stroke="url(#frameGrad)" stroke-width="8" stroke-linecap="round" />
+
+        <!-- 后上叉: 后轮(250,400) 到 车座下管口(330,290) -->
+        <line x1="250" y1="400" x2="330" y2="290" stroke="url(#frameGrad)" stroke-width="6" stroke-linecap="round" />
+
+        <!-- 立管: 中轴(390,390) 到 座管口(330,290) -->
+        <line x1="390" y1="390" x2="330" y2="290" stroke="url(#frameGrad)" stroke-width="8" stroke-linecap="round" />
+
+        <!-- 下管: 中轴(390,390) 到 车头管(490,265) -->
+        <line x1="390" y1="390" x2="490" y2="265" stroke="url(#frameGrad)" stroke-width="8" stroke-linecap="round" />
+
+        <!-- 上管/横梁: 座管口(330,290) 到 车头管(490,265) -->
+        <line x1="330" y1="290" x2="490" y2="265" stroke="url(#frameGrad)" stroke-width="7" stroke-linecap="round" />
+
+        <!-- 前叉: 车头管(490,265) 到 前轮轴(530,400) -->
+        <line x1="490" y1="265" x2="530" y2="400" stroke="#495057" stroke-width="7" stroke-linecap="round" />
+
+        <!-- 车把立管与车把弯把 -->
+        <line x1="490" y1="265" x2="480" y2="225" stroke="#adb5bd" stroke-width="6" stroke-linecap="round" />
+        <path d="M 465 235 C 475 220, 500 220, 505 235 C 508 245, 495 250, 485 248" fill="none" stroke="#212529" stroke-width="6" stroke-linecap="round" />
+
+        <!-- 坐垫支撑杆与车座 -->
+        <line x1="330" y1="290" x2="320" y2="265" stroke="#adb5bd" stroke-width="6" />
+        <path d="M 290 265 C 310 260, 345 260, 355 268 C 345 273, 310 273, 290 265 Z" fill="#212529" />
+
+        <!-- 链条与牙盘 -->
+        <circle cx="390" cy="390" r="22" fill="none" stroke="#6c757d" stroke-width="4" stroke-dasharray="6 3" />
+        <line x1="250" y1="400" x2="390" y2="390" stroke="#6c757d" stroke-width="2" stroke-dasharray="5 3" />
+
+        <!-- ========== 鹈鹕主体 (带颠簸动画) ========== -->
+        <g class="pelican-body-group">
+          <!-- 鹈鹕尾羽 -->
+          <g class="pelican-tail">
+            <path d="M 305 285 Q 260 275 275 305 Q 295 300 315 295 Z" fill="#ced4da" />
+            <path d="M 310 280 Q 255 260 270 288 Z" fill="#adb5bd" />
+          </g>
+
+          <!-- 鹈鹕丰满身躯 -->
+          <ellipse cx="370" cy="275" rx="55" ry="42" fill="#f8f9fa" stroke="#e9ecef" stroke-width="2" transform="rotate(-15 370 275)" />
+
+          <!-- 翅膀 (收在身侧) -->
+          <path d="M 345 255 C 390 250, 415 285, 375 305 C 345 305, 335 275, 345 255 Z" fill="#dee2e6" stroke="#ced4da" stroke-width="2" />
+          <path d="M 355 270 C 385 268, 395 285, 370 295" fill="none" stroke="#adb5bd" stroke-width="2" stroke-linecap="round" />
+
+          <!-- 优雅长脖子弯曲向上 -->
+          <path d="M 395 260 C 425 240, 435 190, 455 175 C 465 170, 475 175, 470 190 C 455 215, 435 275, 405 285 Z" fill="#f8f9fa" />
+
+          <!-- 头部 -->
+          <ellipse cx="468" cy="165" rx="20" ry="17" fill="#f8f9fa" />
+
+          <!-- 萌萌大眼睛 -->
+          <circle cx="474" cy="160" r="5.5" fill="#212529" />
+          <circle cx="476" cy="158" r="2" fill="#ffffff" />
+
+          <!-- 酷炫太阳帽/骑行遮阳帽 -->
+          <path d="M 450 155 Q 470 142 490 155 Q 515 156 525 162 Q 485 158 450 155 Z" fill="#0077b6" />
+          <path d="M 456 154 C 458 140, 484 140, 487 154 Z" fill="#0096c7" />
+
+          <!-- 上喙 (大长嘴巴) -->
+          <path d="M 482 160 Q 555 175 580 185 Q 545 190 480 178 Z" fill="#ffb703" stroke="#fb8500" stroke-width="1.5" />
+          <!-- 嘴尖小钩 -->
+          <path d="M 580 185 Q 583 189 578 192" fill="none" stroke="#d46100" stroke-width="2.5" stroke-linecap="round" />
+
+          <!-- 经典的鹈鹕标志性大喉囊 (下喙) -->
+          <g class="pelican-beak-lower">
+            <path d="M 478 175 Q 525 183 578 188 C 560 220, 500 240, 465 190 Z" fill="url(#pouchGrad)" opacity="0.95" stroke="#f77f00" stroke-width="1.5" />
+            <!-- 喉囊里的可爱小鱼尾巴露出来晃动 -->
+            <path d="M 505 200 Q 515 195 522 198 L 528 193 L 526 205 Z" fill="#90e0ef" opacity="0.8" />
+          </g>
+
+          <!-- 鹈鹕翅膀前端/手臂伸出握住车把 -->
+          <path d="M 390 270 Q 440 250 488 238" fill="none" stroke="#f8f9fa" stroke-width="12" stroke-linecap="round" />
+          <circle cx="488" cy="238" r="6" fill="#f8f9fa" />
+        </g>
+
+        <!-- ========== 脚踏与踩踏动画联动 ========== -->
+        <!-- 曲柄中轴 (390, 390) -->
+        <g class="crank-rotate">
+          <!-- 曲柄臂1 (朝上/前) -->
+          <line x1="390" y1="390" x2="355" y2="345" stroke="#343a40" stroke-width="6" stroke-linecap="round" />
+          <!-- 脚踏板1 -->
+          <g transform="translate(355, 345)">
+            <g class="pedal-keep-level">
+              <rect x="-12" y="-4" width="24" height="8" rx="3" fill="#f77f00" />
+            </g>
+          </g>
+
+          <!-- 曲柄臂2 (朝下/后，180度相对) -->
+          <line x1="390" y1="390" x2="425" y2="435" stroke="#343a40" stroke-width="6" stroke-linecap="round" />
+          <!-- 脚踏板2 -->
+          <g transform="translate(425, 435)">
+            <g class="pedal-keep-level">
+              <rect x="-12" y="-4" width="24" height="8" rx="3" fill="#f77f00" />
+            </g>
+          </g>
+        </g>
+
+        <!-- 鹈鹕腿部与脚蹼 (动态踩在上方脚踏板附近) -->
+        <!-- 大腿从身躯 (375, 295) 伸出到 膝盖 (395, 335) 再到 鸭掌脚蹼 (360, 350) -->
+        <g class="pelican-body-group">
+          <!-- 腿骨骼 -->
+          <polyline points="375,295 390,335 365,350" fill="none" stroke="#f77f00" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+          <!-- 蹼足踩踏板 -->
+          <polygon points="350,352 375,348 370,358" fill="#ffb703" stroke="#f77f00" stroke-width="1" />
+        </g>
+      </g>
+    </svg>
+  </div>
+
+  <script>
+    const themeToggleBtn = document.getElementById('themeToggle');
+    const htmlEl = document.documentElement;
+
+    // 自动检测系统色彩偏好
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (prefersDark && htmlEl.getAttribute('data-embed') !== '1') {
+      htmlEl.setAttribute('data-theme', 'dark');
+    }
+
+    themeToggleBtn.addEventListener('click', () => {
+      const currentTheme = htmlEl.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      htmlEl.setAttribute('data-theme', newTheme);
+    });
+  </script>
+</body>
+</html>
