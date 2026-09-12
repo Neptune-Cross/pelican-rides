@@ -1,0 +1,42 @@
+html[data-viewer] * { letter-spacing: 0; }
+html[data-viewer] body { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: 76px minmax(0, 1fr) 70px; align-items: stretch; justify-content: stretch; width: 100%; height: 100svh; min-height: 0; padding: 0; overflow: hidden; }
+html[data-viewer] body > header:not(.viewer-header), html[data-viewer] body > footer:not(.viewer-footer), html[data-viewer] .header-panel, html[data-viewer] .container > .header, html[data-viewer] .controls-hint { display: none !important; }
+html[data-viewer] .scene, html[data-viewer] .canvas-container, html[data-viewer] .container { grid-row: 2; min-height: 0; height: 100%; width: 100%; max-width: 1280px; margin: 0 auto; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+html[data-viewer] .scene svg, html[data-viewer] .canvas-container > svg { width: 100%; height: 100%; max-height: 100%; min-height: 0; min-width: 0; left: auto; transform: none; }
+html[data-viewer] .scene-card { width: 100%; border: 0; border-radius: 0; box-shadow: none; backdrop-filter: none; background: transparent; }
+html[data-viewer] .scene-card svg { max-height: calc(100svh - 146px); width: 100%; }
+html[data-viewer] .viewer-header, html[data-viewer] .viewer-footer { width: 100%; margin: 0; padding: 14px 32px; display: flex; flex-direction: row; align-items: center; justify-content: space-between; gap: 20px; background: #fdfefdf5; color: #203b36; font: 13px "Segoe UI", "Microsoft YaHei", sans-serif; z-index: 2; }
+html[data-viewer] .viewer-header { grid-row: 1; border-bottom: 1px solid #cbd9d14d; }
+html[data-viewer] .viewer-footer { grid-row: 3; border-top: 1px solid #cbd9d14d; }
+html[data-viewer][data-theme="dark"] .viewer-header, html[data-viewer][data-theme="dark"] .viewer-footer { background: #172322f5; color: #edf3ed; }
+.viewer-header a, .viewer-footer a { color: inherit; text-decoration: none; }
+.viewer-header .viewer-home { display: flex; align-items: center; gap: 10px; font-size: 13px; }
+.viewer-header h1 { margin: 0; font: 600 18px "Microsoft YaHei", sans-serif; }
+.viewer-header .viewer-number { display: inline; color: #6b7f73; font-size: 11px; font-variant-numeric: tabular-nums; }
+.viewer-header [data-icon], .viewer-footer [data-icon] { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; flex-shrink: 0; }
+.viewer-header [data-icon] svg, .viewer-footer [data-icon] svg { width: 100%; height: 100%; display: block; }
+.viewer-header a:hover, .viewer-footer a:hover { color: #c84d3b; }
+.viewer-controls { display: flex; align-items: center; justify-content: center; gap: 14px; }
+.viewer-footer .viewer-button { display: inline-flex; justify-content: center; align-items: center; width: 38px; height: 38px; padding: 0; border: 1px solid #99afa066; border-radius: 50%; background: transparent; color: inherit; cursor: pointer; }
+.viewer-footer .viewer-button:hover { background: #b7cabb33; }
+.viewer-footer .viewer-speed { display: flex; gap: 10px; align-items: center; }
+.viewer-speed input { width: 88px; accent-color: #276857; }
+.viewer-speed output { min-width: 29px; font-size: 11px; font-variant-numeric: tabular-nums; }
+.viewer-switch { display: inline-flex; align-items: center; gap: 10px; font-size: 12px; min-height: 40px; }
+.viewer-switch:last-child { justify-content: flex-end; }
+.viewer-switch { min-width: 95px; }
+.viewer-header :focus-visible, .viewer-footer :focus-visible { outline: 3px solid #c84d3b; outline-offset: 4px; }
+html[data-viewer][data-paused] body * { animation-play-state: paused !important; }
+@media (max-width: 600px) {
+  html[data-viewer] body { grid-template-rows: 66px minmax(0, 1fr) 74px; }
+  html[data-viewer] .viewer-header, html[data-viewer] .viewer-footer { padding: 12px 16px; gap: 10px; }
+  .viewer-header .viewer-home { gap: 7px; font-size: 11px; }
+  .viewer-header h1 { font-size: 16px; }
+  .viewer-header .viewer-number { font-size: 10px; }
+  .viewer-switch > span:not([data-icon]) { display: none; }
+  .viewer-switch { min-width: 30px; }
+  .viewer-controls { gap: 10px; }
+  .viewer-speed input { width: 65px; }
+  .viewer-footer .viewer-speed { gap: 6px; }
+  html[data-viewer] .scene-card svg { max-height: calc(100svh - 140px); }
+}

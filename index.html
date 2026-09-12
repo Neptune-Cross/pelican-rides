@@ -1,99 +1,106 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>鹈鹕合集</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; letter-spacing: 0; }
-    html, body {
-      background: #1f3d32;
-      color: #163027;
-      font-family: Georgia, "Songti SC", "Microsoft YaHei", serif;
-    }
-    .piece {
-      position: relative;
-      display: block;
-      min-height: 72svh;
-      overflow: hidden;
-      color: #163027;
-      text-decoration: none;
-    }
-    .piece.hero { min-height: 88svh; }
-    .piece iframe {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      border: 0;
-      pointer-events: none;
-    }
-    .copy {
-      position: absolute;
-      left: 5%;
-      bottom: 9%;
-      z-index: 2;
-      max-width: 22rem;
-      text-shadow: 0 1px 10px rgba(255, 255, 255, 0.72);
-    }
-    h1 {
-      font-size: 56px;
-      font-weight: 600;
-      line-height: 1.05;
-    }
-    h2 {
-      font-size: 32px;
-      font-weight: 500;
-      line-height: 1.15;
-    }
-    nav {
-      margin-top: 18px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 18px;
-    }
-    nav a {
-      color: #c23b22;
-      font: 15px/1 "Microsoft YaHei", sans-serif;
-      text-decoration: none;
-      border-bottom: 1px solid currentColor;
-      padding-bottom: 3px;
-    }
-    nav a:hover { color: #163027; }
-    .piece:not(.hero) h2 {
-      color: #163027;
-    }
-    .piece:not(.hero)::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-    }
-    @media (max-width: 700px) {
-      h1 { font-size: 40px; }
-      h2 { font-size: 26px; }
-      .copy { left: 6%; right: 6%; max-width: none; }
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="一只鹈鹕，一辆自行车，三段不赶时间的旅程。海岸骑行、漫游记、破风骑行，收藏你喜欢的风景。">
+  <meta name="theme-color" content="#fdfefd">
+  <meta property="og:title" content="鹈鹕合集 · Pelican Rides">
+  <meta property="og:description" content="海风、旷野与自由。和鹈鹕一起，慢慢骑，慢慢看。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://neptune-cross.github.io/pelican-rides/">
+  <meta property="og:image" content="https://neptune-cross.github.io/pelican-rides/assets/coast.webp">
+  <title>鹈鹕合集 · Pelican Rides</title>
+  <link rel="icon" href="./assets/favicon.png" type="image/png">
+  <link rel="stylesheet" href="./collection.css">
+  <script src="./assets/icons.js" defer></script>
+  <script src="./collection.js" defer></script>
 </head>
 <body>
-  <section class="piece hero">
-    <iframe src="./coast.html?embed=1" title="鹈鹕的海岸骑行" tabindex="-1"></iframe>
-    <div class="copy">
-      <h1>鹈鹕合集</h1>
-      <nav>
-        <a href="./coast.html">海岸骑行</a>
-        <a href="./wander.html">漫游记</a>
-        <a href="./wind.html">破风骑行</a>
-      </nav>
+  <a class="skip-link" href="#collection">跳转到作品合集</a>
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="brand" href="./index.html" aria-label="鹈鹕合集首页">
+        <span class="brand-mark" data-icon="bird" aria-hidden="true"></span>
+        <span class="brand-type">鹈鹕合集<span>PELICAN RIDES</span></span>
+      </a>
+      <nav class="primary-nav" aria-label="主导航"><a href="#collection">作品合集</a><a href="#about">关于合集</a></nav>
+      <a class="random-link" href="./wander.html" data-random title="随机看一部作品" aria-label="随机看一部作品"><span data-icon="shuffle" aria-hidden="true"></span><span>随便逛逛</span></a>
     </div>
-  </section>
-  <a class="piece" href="./wander.html">
-    <iframe src="./wander.html?embed=1" title="鹈鹕漫游记" tabindex="-1"></iframe>
-    <div class="copy"><h2>漫游记</h2></div>
-  </a>
-  <a class="piece" href="./wind.html">
-    <iframe src="./wind.html?embed=1" title="鹈鹕破风骑行" tabindex="-1"></iframe>
-    <div class="copy"><h2>破风骑行</h2></div>
-  </a>
+  </header>
+  <main>
+    <section class="hero" aria-labelledby="hero-title">
+      <picture class="hero-art">
+        <source media="(max-width: 760px)" srcset="./assets/hero-mobile.webp" width="800" height="1080">
+        <source media="(max-width: 1100px)" srcset="./assets/hero-tablet.webp" width="1400" height="800">
+        <img src="./assets/hero-desktop.webp" width="1800" height="680" alt="系着红围巾的白色鹈鹕，骑着绿色自行车经过晴朗的海岸" fetchpriority="high">
+      </picture>
+      <div class="shell hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="short-line"></span>小小旅程，自在发生</p>
+          <h1 id="hero-title">鹈鹕骑行合集</h1>
+          <p class="hero-description">把日子过慢一点，<br>把风景看久一点。</p>
+          <a class="button button-coral" href="./coast.html">开启海岸之旅<span data-icon="arrow-up-right" aria-hidden="true"></span></a>
+          <a class="hero-explore" href="#collection">探索全部作品<span data-icon="arrow-down" aria-hidden="true"></span></a>
+        </div>
+        <div class="hero-caption"><span class="caption-index">01 / 03</span><span>海岸骑行<span class="caption-en">COASTAL RIDE</span></span></div>
+        <span class="hero-side-note">有风的日子，适合出发。</span>
+      </div>
+    </section>
+    <section class="collection shell" id="collection" aria-labelledby="collection-title">
+      <div class="section-heading">
+        <div><p class="eyebrow muted">THE COLLECTION</p><h2 id="collection-title">每一程，都有好风景<span class="work-count">03</span></h2></div>
+        <div class="filters" role="group" aria-label="作品筛选" hidden>
+          <button type="button" class="filter active" data-filter="all" aria-pressed="true">全部作品 <span>3</span></button>
+          <button type="button" class="filter" data-filter="saved" aria-pressed="false"><span data-icon="heart" aria-hidden="true"></span>我的收藏 <span id="saved-count">0</span></button>
+        </div>
+      </div>
+      <div class="works-grid">
+        <article class="work" data-work="coast">
+          <div class="work-cover">
+            <a href="./coast.html" tabindex="-1" aria-hidden="true"><img src="./assets/coast.webp" alt="" width="1200" height="750" loading="lazy"><span class="cover-enter"><span data-icon="play" aria-hidden="true"></span></span></a>
+            <span class="work-label"><span data-icon="waves" aria-hidden="true"></span>海岸慢骑</span>
+            <button type="button" class="save-button" data-save="coast" aria-label="收藏海岸骑行" aria-pressed="false" title="收藏海岸骑行" hidden><span data-icon="heart" aria-hidden="true"></span></button>
+          </div>
+          <div class="work-meta"><span>01 / COASTAL RIDE</span><span class="category-dot coast-dot"></span><span>治愈 · 海风</span></div>
+          <a class="work-title" href="./coast.html"><h3>海岸骑行</h3><span data-icon="arrow-up-right" aria-hidden="true"></span></a>
+          <p class="work-description">沿着海岸线，让围巾和心情一起乘风。</p>
+          <div class="work-footer"><span>晴日海岸</span><span>悠然前行<span data-icon="move-right" aria-hidden="true"></span></span></div>
+        </article>
+        <article class="work" data-work="wander">
+          <div class="work-cover">
+            <a href="./wander.html" tabindex="-1" aria-hidden="true"><img src="./assets/wander.webp" alt="" width="1200" height="750" loading="lazy"><span class="cover-enter"><span data-icon="play" aria-hidden="true"></span></span></a>
+            <span class="work-label"><span data-icon="compass" aria-hidden="true"></span>旷野漫游</span>
+            <button type="button" class="save-button" data-save="wander" aria-label="收藏漫游记" aria-pressed="false" title="收藏漫游记" hidden><span data-icon="heart" aria-hidden="true"></span></button>
+          </div>
+          <div class="work-meta"><span>02 / WANDER DIARY</span><span class="category-dot wander-dot"></span><span>轻快 · 自由</span></div>
+          <a class="work-title" href="./wander.html"><h3>漫游记</h3><span data-icon="arrow-up-right" aria-hidden="true"></span></a>
+          <p class="work-description">没有目的地，下一朵云就是出发的理由。</p>
+          <div class="work-footer"><span>白昼与星夜</span><span>随心漫游<span data-icon="move-right" aria-hidden="true"></span></span></div>
+        </article>
+        <article class="work" data-work="wind">
+          <div class="work-cover">
+            <a href="./wind.html" tabindex="-1" aria-hidden="true"><img src="./assets/wind.webp" alt="" width="1200" height="750" loading="lazy"><span class="cover-enter"><span data-icon="play" aria-hidden="true"></span></span></a>
+            <span class="work-label"><span data-icon="wind" aria-hidden="true"></span>追风时刻</span>
+            <button type="button" class="save-button" data-save="wind" aria-label="收藏破风骑行" aria-pressed="false" title="收藏破风骑行" hidden><span data-icon="heart" aria-hidden="true"></span></button>
+          </div>
+          <div class="work-meta"><span>03 / CHASING WIND</span><span class="category-dot wind-dot"></span><span>畅快 · 远方</span></div>
+          <a class="work-title" href="./wind.html"><h3>破风骑行</h3><span data-icon="arrow-up-right" aria-hidden="true"></span></a>
+          <p class="work-description">迎着风再快一点，把烦恼留给身后的山。</p>
+          <div class="work-footer"><span>山野公路</span><span>全速向前<span data-icon="move-right" aria-hidden="true"></span></span></div>
+        </article>
+      </div>
+      <div class="empty-state" hidden><span data-icon="heart" aria-hidden="true"></span><h3>还没有收藏的旅程</h3><button class="text-button" type="button" data-show-all>看看全部作品<span data-icon="arrow-right" aria-hidden="true"></span></button></div>
+    </section>
+    <section class="about" id="about" aria-labelledby="about-title">
+      <div class="shell about-inner">
+        <div class="about-heading"><span data-icon="bird" aria-hidden="true"></span><p class="eyebrow muted">A LITTLE MOMENT OF JOY</p><h2 id="about-title">生活很大，<br>快乐可以很小。</h2></div>
+        <div class="about-copy"><p>一只鹈鹕，一辆自行车，<br>还有一些不赶时间的风景。</p><p>我们把这些小小的骑行片刻收集在这里。<br>愿你每次经过，都能带走一点轻松。</p><a href="./wander.html" data-random class="text-button">再出发一次<span data-icon="arrow-up-right" aria-hidden="true"></span></a></div>
+        <span class="about-edition">VOL.<strong>01</strong>三段旅程 · 同一份自在</span>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer shell"><a class="footer-brand" href="./index.html">鹈鹕合集<span>PELICAN RIDES</span></a><p>慢慢骑，慢慢看。</p><a href="https://github.com/Neptune-Cross/pelican-rides" target="_blank" rel="noopener noreferrer" class="source-link">GitHub<span data-icon="arrow-up-right" aria-hidden="true"></span></a></footer>
+  <p class="toast" role="status" aria-live="polite" aria-atomic="true"></p>
 </body>
 </html>
