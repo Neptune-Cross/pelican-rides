@@ -1,17 +1,20 @@
 # 鹈鹕合集
 
-一个无需构建的静态动画作品集，包含六段鹈鹕骑行旅程，按时间先后排列：
+一个无需构建的静态动画作品集，包含七段鹈鹕骑行旅程，按时间先后排列：
 
 - [海岸骑行](./coast.html)
 - [漫游记](./wander.html)
 - [破风骑行](./wind.html)
 - [Astra-low-20260912-123602-鹈鹕测试](./astra-low-20260912-123602.html)
 - [Astra-low-20260912-124711-鹈鹕测试](./astra-low-20260912-124711.html)
+- [GPT-6-sol-low-20260912-143859-鹈鹕测试](./gpt-6-sol-low-20260912-143859.html)
 - [GPT-6-sol-medium-20260912-144352-鹈鹕测试](./gpt-6-sol-medium-20260912-144352.html)
 
 两部测试分别来自 `pelican-cycle-20260912/index.html` 和 `pelican-svg-ride-20260912/index.html`。名称使用源文件的创建时间（UTC+08:00），精确到秒；原目录保持不变，收录副本保留原始画面和动画逻辑。
 
 GPT-6-sol-medium 测试来自 `pelican-bicycle-svg/index.html`，创建时间为 2026-09-12 14:43:52（UTC+08:00）。收录副本保留原 SVG 与动画脚本，原始暂停按钮接入统一工具栏；观看时的减少动态效果偏好由合集播放器统一处理。
+
+GPT-6-sol-low 测试来自 `鹈鹕骑行动画/index.html`，创建时间为 2026-09-12 14:38:59（UTC+08:00），因此排在 medium 之前。保留原 SVG 与 CSS 动画，通过观看容器维持画面比例；暂停、调速和减少动态效果由合集播放器统一处理。
 
 在线地址：https://neptune-cross.github.io/pelican-rides/
 
@@ -29,6 +32,7 @@ GPT-6-sol-medium 测试来自 `pelican-bicycle-svg/index.html`，创建时间为
 - `coast.html`、`wander.html`、`wind.html`：三个独立动画，仍保留 `?embed=1` 嵌入模式。
 - `astra-low-20260912-123602.html`、`astra-low-20260912-124711.html`：按创建时间命名的测试副本，也支持 `?embed=1`。
 - `gpt-6-sol-medium-20260912-144352.html`：GPT-6-sol-medium 测试副本，支持 `?embed=1`。
+- `gpt-6-sol-low-20260912-143859.html`：GPT-6-sol-low 测试副本，支持 `?embed=1`。
 - `viewer.css`、`viewer.js`：作品页的统一导航与播放控件。
 - `assets/`：从本项目动画截取的 WebP 封面、三种尺寸的首页主视觉与本地图标。图标来自 Lucide，许可证见 `assets/icons-LICENSE`。
 
@@ -41,3 +45,5 @@ GPT-6-sol-medium 测试来自 `pelican-bicycle-svg/index.html`，创建时间为
 同日收录两部 Astra-low 测试：校验源文件与收录副本的 SVG 和动画脚本一致；通过 5 种屏幕尺寸的长标题与控件布局检查，以及新增作品的封面、收藏、播放、暂停、原有调速、减少动态效果和五部作品顺序切换检查。原有三部作品的回归检查通过。
 
 同日收录 GPT-6-sol-medium 测试：校验原 SVG 与动画脚本一致；通过 4 种屏幕尺寸的封面和长标题布局检查，以及收藏、暂停恢复、减少动态效果和六部作品顺序切换检查。原有首页及三部动画的回归检查通过。
+
+同日收录 GPT-6-sol-low 测试：校验原 SVG 与 CSS 动画关键帧一致；通过 5 种屏幕尺寸的完整画面、封面及长标题检查，以及收藏、暂停、调速、减少动态效果和七部作品的时间顺序与双向切换检查。

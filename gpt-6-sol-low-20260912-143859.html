@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GPT-6-sol-low-20260912-143859-鹈鹕测试 · 鹈鹕合集</title>
+  <link rel="icon" href="./assets/favicon.png" type="image/png">
+  <link rel="stylesheet" href="./viewer.css?v=20260912-sol">
+  <script src="./assets/icons.js" defer></script>
+  <script src="./viewer.js?v=20260912-sol-low" defer></script>
+  <script>if(new URLSearchParams(location.search).has('embed'))document.documentElement.setAttribute('data-embed','1')</script>
+  <style>
+    :root { color-scheme: light; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; width: 100%; min-height: 100%; }
+    body { background: #cbeaf1; overflow: hidden; }
+    svg { display: block; width: 100vw; height: 100vh; }
+    .wheel { transform-box: view-box; animation: spin 1.2s linear infinite; }
+    .rear-wheel { transform-origin: 420px 505px; }
+    .front-wheel { transform-origin: 825px 505px; }
+    .crank { transform-origin: 608px 505px; animation: spin 1.2s linear infinite; }
+    .rider { animation: bob .6s ease-in-out infinite alternate; }
+    .wing { transform-origin: 578px 292px; animation: flap 1.2s ease-in-out infinite; }
+    .scenery { animation: travel 12s linear infinite; }
+    .scenery.second { animation-name: travel-second; }
+    .road-mark { animation: marks 1.2s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes bob { to { transform: translateY(5px); } }
+    @keyframes flap { 50% { transform: rotate(-8deg); } }
+    @keyframes travel { from { transform: translateX(0); } to { transform: translateX(-1200px); } }
+    @keyframes travel-second { from { transform: translateX(1200px); } to { transform: translateX(0); } }
+    @keyframes marks { to { transform: translateX(-180px); } }
+    @media (prefers-reduced-motion: reduce) {
+      html:not([data-viewer]) :is(.wheel, .crank, .rider, .wing, .scenery, .road-mark) { animation: none; }
+    }
+    html:is([data-viewer], [data-embed]) .contained-artwork { container-type: size; }
+    html:is([data-viewer], [data-embed]) .contained-artwork svg { width: min(100cqw, calc(100cqh * 12 / 7)); height: auto; flex-shrink: 0; }
+  </style>
+</head>
+<body>
+  <main class="imported-artwork contained-artwork">
+  <svg viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid slice" role="img" aria-labelledby="title desc" xmlns="http://www.w3.org/2000/svg">
+    <title id="title">鹈鹕骑自行车</title>
+    <desc id="desc">一只戴着红色围巾的白色鹈鹕，骑着青绿色自行车穿过晴朗的乡间。</desc>
+    <defs>
+      <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#93d6e5"/><stop offset="1" stop-color="#f2e7bb"/></linearGradient>
+      <linearGradient id="road" x2="0" y2="1"><stop stop-color="#617373"/><stop offset="1" stop-color="#34464a"/></linearGradient>
+      <pattern id="grass" width="36" height="14" patternUnits="userSpaceOnUse"><path d="M4 14l4-5m18 5 3-4" stroke="#72a56f" stroke-width="2"/></pattern>
+      <g id="landscape">
+        <path d="M0 407 Q150 321 308 405 T620 407 T940 402 T1200 405 V570 H0Z" fill="#a3c994"/>
+        <path d="M0 452 Q240 370 420 451 T800 445 T1200 449 V570 H0Z" fill="#70aa89"/>
+        <g fill="#426f69"><path d="M110 441v-70m-25 22q25-80 50 0z" stroke="#426f69" stroke-width="9" stroke-linejoin="round"/><path d="M345 448v-92m-30 39q29-89 59 0z" stroke="#426f69" stroke-width="9" stroke-linejoin="round"/><path d="M1000 443v-76m-28 33q28-85 56 0z" stroke="#426f69" stroke-width="9" stroke-linejoin="round"/></g>
+        <g fill="#e9f2df"><circle cx="198" cy="472" r="4"/><circle cx="221" cy="467" r="3"/><circle cx="758" cy="474" r="4"/><circle cx="785" cy="469" r="3"/></g>
+      </g>
+      <g id="spokes" stroke="#dce9e5" stroke-width="2" opacity=".85">
+        <path d="M0-101V101M-101 0H101M-71-71 71 71M71-71-71 71M-39-93 39 93M39-93-39 93M-93-39 93 39M93-39-93 39"/>
+      </g>
+    </defs>
+
+    <path fill="url(#sky)" d="M0 0h1200v700H0z"/>
+    <circle cx="976" cy="112" r="61" fill="#fff0ad" opacity=".9"/>
+    <g fill="#fff" opacity=".7"><ellipse cx="175" cy="122" rx="88" ry="20"/><ellipse cx="129" cy="112" rx="37" ry="27"/><ellipse cx="208" cy="109" rx="43" ry="30"/><ellipse cx="605" cy="170" rx="74" ry="16"/><ellipse cx="636" cy="160" rx="35" ry="22"/></g>
+    <g class="scenery"><use href="#landscape"/></g>
+    <g class="scenery second"><use href="#landscape"/></g>
+    <path d="M0 536 Q600 522 1200 536V700H0Z" fill="#87ae78"/>
+    <path d="M0 543H1200V700H0Z" fill="url(#road)"/>
+    <path d="M0 552H1200" stroke="#c4cfaa" stroke-width="7"/>
+    <g class="road-mark" stroke="#e9e2b8" stroke-width="7" stroke-linecap="round" opacity=".75"><path d="M-30 633h76m104 0h76m104 0h76m104 0h76m104 0h76m104 0h76m104 0h76m104 0h76m104 0h76"/></g>
+    <ellipse cx="623" cy="618" rx="319" ry="19" fill="#172e35" opacity=".22"/>
+
+    <!-- Bicycle wheels and frame -->
+    <g fill="none">
+      <circle cx="420" cy="505" r="108" stroke="#263d42" stroke-width="18"/>
+      <circle cx="420" cy="505" r="99" stroke="#e8eee7" stroke-width="4"/>
+      <g class="wheel rear-wheel"><use href="#spokes" transform="translate(420 505)"/></g>
+      <circle cx="825" cy="505" r="108" stroke="#263d42" stroke-width="18"/>
+      <circle cx="825" cy="505" r="99" stroke="#e8eee7" stroke-width="4"/>
+      <g class="wheel front-wheel"><use href="#spokes" transform="translate(825 505)"/></g>
+      <path d="M420 505 510 367 608 505 420 505M510 367h192L608 505M702 367l123 138M608 505l-91-138" stroke="#127d7c" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M695 351l15 27M699 348l48-13 27 9" stroke="#293f43" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M509 369l-9-31m-44 0h91" stroke="#293f43" stroke-width="10" stroke-linecap="round"/>
+      <path d="M420 505l-20-72m-9-4h29" stroke="#263d42" stroke-width="5" stroke-linecap="round"/>
+    </g>
+    <g fill="#263d42"><circle cx="420" cy="505" r="12"/><circle cx="825" cy="505" r="12"/><circle cx="608" cy="505" r="20"/></g>
+
+    <!-- The rotating feet and pedals sit behind the bird. -->
+    <g class="crank">
+      <path d="M608 505l-44-31m44 31 44 31" fill="none" stroke="#203e42" stroke-width="8" stroke-linecap="round"/>
+      <path d="M550 474h29m60 62h30" stroke="#182d32" stroke-width="10" stroke-linecap="round"/>
+      <path d="M564 472 Q535 438 548 397M652 534 Q630 476 581 437" stroke="#e2a55c" stroke-width="16" fill="none" stroke-linecap="round"/>
+      <path d="M543 398q-27 1-29-10l-13 7q10 25 40 23zm34 38q-23 1-29-9l-11 8q9 24 37 21z" fill="#e6aa60"/>
+    </g>
+
+    <g class="rider">
+      <!-- Tail, body and breast -->
+      <path d="M455 323q-56 2-89-47 32 12 67 5-22-15-31-37 54 37 102 35z" fill="#e7e9dd" stroke="#b2c4b8" stroke-width="4"/>
+      <path d="M480 315q-11-78 62-92 88-11 116 71 9 58-43 104-41 35-118 11-45-22-39-72z" fill="#f9f8e9" stroke="#c6d2c7" stroke-width="5"/>
+      <path d="M578 388q-24 34-69 17-28-15-33-44" fill="none" stroke="#e2e4d7" stroke-width="18" stroke-linecap="round"/>
+      <!-- Long neck and head -->
+      <path d="M605 285q-23-56-6-119 7-39 41-51 47-14 75 19 14 18 9 48-5 30-37 37-18 4-32-8 0 56 15 94z" fill="#faf9ec" stroke="#c4d1c8" stroke-width="5"/>
+      <path d="M616 213q21 15 43 9" fill="none" stroke="#d6dfd4" stroke-width="6"/>
+      <!-- Oversized pouch and bill -->
+      <path d="M687 176q66 17 188-2-15 15-84 29-58 14-84 3z" fill="#e9ac64" stroke="#ad7551" stroke-width="4"/>
+      <path d="M701 202q29 18 89 4 27-7 55-17-13 78-71 95-46 12-72-43z" fill="#f4c779" stroke="#b87952" stroke-width="5"/>
+      <path d="M702 205q57 24 140-15" fill="none" stroke="#a9694c" stroke-width="4"/>
+      <circle cx="691" cy="152" r="8" fill="#273b3b"/><circle cx="694" cy="149" r="2.5" fill="#fff"/>
+      <path d="M616 232q34 20 51 3l9 17q-32 20-64-3z" fill="#d35e52"/>
+      <path d="M653 247q-9 22 7 56l21-4q-15-24-11-51z" fill="#d35e52"/>
+      <path d="M654 264q20 2 25-7" fill="none" stroke="#ac433d" stroke-width="4"/>
+      <!-- Wing and arm reach toward the handlebar -->
+      <g class="wing"><path d="M548 286q-56-11-54 44 3 36 59 40 31 0 51-31-36 4-51-23 34 12 58 2-15-21-63-32z" fill="#e6e9dc" stroke="#bbc9bf" stroke-width="5"/><path d="M593 324q40 2 80 4 19 0 30 17" fill="none" stroke="#f6f5e8" stroke-width="19" stroke-linecap="round"/><path d="M700 345q9-13 25-12" fill="none" stroke="#e6aa60" stroke-width="12" stroke-linecap="round"/></g>
+    </g>
+  </svg>
+  </main>
+</body>
+</html>

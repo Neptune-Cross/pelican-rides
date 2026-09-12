@@ -6,6 +6,7 @@
     { id: 'wind', title: '破风骑行' },
     { id: 'astra-low-20260912-123602', title: 'Astra-low-20260912-123602-鹈鹕测试', speed: false },
     { id: 'astra-low-20260912-124711', title: 'Astra-low-20260912-124711-鹈鹕测试' },
+    { id: 'gpt-6-sol-low-20260912-143859', title: 'GPT-6-sol-low-20260912-143859-鹈鹕测试' },
     { id: 'gpt-6-sol-medium-20260912-144352', title: 'GPT-6-sol-medium-20260912-144352-鹈鹕测试', speed: false }
   ];
   const index = entries.findIndex(entry => location.pathname.endsWith(`/${entry.id}.html`));
