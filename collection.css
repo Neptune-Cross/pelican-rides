@@ -85,6 +85,10 @@ h3 { font-size: 23px; font-weight: 650; line-height: 1.4; }
 .work-title > [data-icon] { width: 23px; height: 23px; color: #557165; transition: transform .2s; }
 .work-title:hover { color: var(--coral); }
 .work-title:hover > [data-icon] { transform: translate(2px, -2px); color: inherit; }
+.work-test .work-title { align-items: flex-start; gap: 12px; }
+.work-test .work-title h3 { min-width: 0; font-size: 18px; line-height: 1.6; overflow-wrap: anywhere; }
+.work-test .work-title > [data-icon] { margin-top: 3px; }
+.work-test time { font-variant-numeric: tabular-nums; white-space: nowrap; }
 .work-description { color: var(--muted); font-size: 12px; line-height: 1.9; margin-top: 10px; }
 .work-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid var(--line); margin-top: 20px; padding-top: 15px; color: #768075; font-size: 10px; }
 .work-footer > span:last-child { display: flex; align-items: center; gap: 8px; }

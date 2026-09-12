@@ -1,6 +1,6 @@
 (() => {
-  const works = ['coast', 'wander', 'wind'];
-  const names = { coast: '海岸骑行', wander: '漫游记', wind: '破风骑行' };
+  const names = Object.fromEntries([...document.querySelectorAll('[data-work]')].map(work => [work.dataset.work, work.querySelector('h3').textContent]));
+  const works = Object.keys(names);
   const storageKey = 'pelican-rides:favorites';
   const toast = document.querySelector('.toast');
   let saved = new Set();
