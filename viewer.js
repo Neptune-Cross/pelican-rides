@@ -5,7 +5,8 @@
     { id: 'wander', title: '漫游记' },
     { id: 'wind', title: '破风骑行' },
     { id: 'astra-low-20260912-123602', title: 'Astra-low-20260912-123602-鹈鹕测试', speed: false },
-    { id: 'astra-low-20260912-124711', title: 'Astra-low-20260912-124711-鹈鹕测试' }
+    { id: 'astra-low-20260912-124711', title: 'Astra-low-20260912-124711-鹈鹕测试' },
+    { id: 'gpt-6-sol-medium-20260912-144352', title: 'GPT-6-sol-medium-20260912-144352-鹈鹕测试', speed: false }
   ];
   const index = entries.findIndex(entry => location.pathname.endsWith(`/${entry.id}.html`));
   if (index < 0) return;
@@ -27,6 +28,7 @@
   document.body.prepend(header);
   document.body.append(footer);
   root.setAttribute('data-viewer', current.id);
+  root.toggleAttribute('data-long-title', current.title.length > 24);
   const pauseButton = document.getElementById('viewer-pause');
   const speedInput = document.getElementById('viewer-speed');
   const themeButton = document.getElementById('viewer-theme');
