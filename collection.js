@@ -16,13 +16,16 @@
   const viewerDialog = document.getElementById('upload-viewer');
   const fileInput = document.getElementById('html-upload');
   const dropZone = document.querySelector('[data-drop-zone]');
+  const importList = document.getElementById('import-list');
   const importProgress = document.getElementById('import-progress');
+  const confirmImportButton = document.querySelector('[data-confirm-import]');
   const uploadFrame = document.getElementById('upload-frame');
   const uploadViewerTitle = document.getElementById('upload-viewer-title');
   const playbackButton = document.querySelector('[data-toggle-upload]');
   let activeFilter = 'all';
   let currentUploadId = null;
   let uploadPaused = false;
+  let pendingImports = [];
   let toastTimer;
   let saved = new Set();
 
@@ -171,10 +174,8 @@
 
   function render() {
     const allWorks = [...document.querySelectorAll('[data-work]')];
-    const uploadedCount = uploads.size;
-    const total = staticCount + uploadedCount;
+    const total = staticCount + uploads.size;
     document.getElementById('all-count').textContent = total;
-    document.getElementById('uploaded-count').textContent = uploadedCount;
     document.getElementById('saved-count').textContent = [...saved].filter(id => names[id]).length;
     document.querySelector('.work-count').textContent = String(total).padStart(2, '0');
     document.querySelector('.caption-index').textContent = `01 / ${String(total).padStart(2, '0')}`;
@@ -193,18 +194,16 @@
     });
     let visibleCount = 0;
     allWorks.forEach(work => {
-      const visible = activeFilter === 'all' || (activeFilter === 'saved' && saved.has(work.dataset.work)) || (activeFilter === 'uploaded' && work.dataset.uploaded === 'true');
+      const visible = activeFilter === 'all' || (activeFilter === 'saved' && saved.has(work.dataset.work));
       work.hidden = !visible;
       if (visible) visibleCount += 1;
     });
     const empty = document.querySelector('.empty-state');
     empty.hidden = visibleCount > 0;
     if (!empty.hidden) {
-      const uploadedEmpty = activeFilter === 'uploaded';
-      document.getElementById('empty-title').textContent = uploadedEmpty ? '还没有上传的作品' : '还没有收藏的旅程';
+      document.getElementById('empty-title').textContent = '还没有收藏的旅程';
       const action = document.querySelector('[data-empty-action]');
-      action.firstChild.textContent = uploadedEmpty ? '导入第一部作品' : '看看全部作品';
-      action.dataset.action = uploadedEmpty ? 'import' : 'all';
+      action.firstChild.textContent = '看看全部作品';
     }
   }
 
@@ -213,15 +212,58 @@
     importProgress.classList.toggle('is-error', isError);
   }
 
+  function clearPendingImports() {
+    pendingImports = [];
+    importList.replaceChildren();
+    importList.hidden = true;
+    confirmImportButton.disabled = true;
+    fileInput.value = '';
+  }
+
+  function renderPendingImports() {
+    importList.replaceChildren();
+    importList.hidden = pendingImports.length === 0;
+    pendingImports.forEach((item, index) => {
+      const row = document.createElement('div');
+      row.className = 'import-item';
+      const fileDetails = document.createElement('div');
+      fileDetails.className = 'import-file';
+      const filename = document.createElement('strong');
+      filename.textContent = item.file.name;
+      filename.title = item.file.name;
+      const metadata = document.createElement('span');
+      metadata.textContent = `${formatDate(item.file.lastModified || Date.now())} · ${(item.file.size / 1024).toFixed(1)} KB`;
+      fileDetails.append(filename, metadata);
+      const label = document.createElement('label');
+      label.className = 'import-name';
+      label.textContent = '作品名称';
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.maxLength = 120;
+      input.value = item.title;
+      input.dataset.uploadName = String(index);
+      input.setAttribute('aria-label', `${item.file.name}的作品名称`);
+      input.addEventListener('input', () => {
+        item.title = input.value.slice(0, 120);
+        confirmImportButton.disabled = pendingImports.some(entry => !entry.title.trim());
+      });
+      label.append(input);
+      row.append(fileDetails, label);
+      importList.append(row);
+    });
+    confirmImportButton.disabled = pendingImports.length === 0 || pendingImports.some(item => !item.title.trim());
+  }
+
   function openImportDialog() {
+    clearPendingImports();
     setImportMessage('');
     importDialog.showModal();
   }
 
-  async function importFiles(fileList) {
+  async function stageFiles(fileList) {
     const files = [...fileList];
     if (!files.length) return;
-    let completed = 0;
+    clearPendingImports();
     setImportMessage(`正在读取 ${files.length} 个文件...`);
     for (const file of files) {
       try {
@@ -229,34 +271,53 @@
         if (file.size > MAX_FILE_SIZE) throw new Error(`${file.name} 超过 20 MB`);
         const html = await file.text();
         if (!html.trim()) throw new Error(`${file.name} 是空文件`);
-        const id = await contentId(html);
+        pendingImports.push({ file, html, title: extractTitle(html, file.name) });
+      } catch (error) {
+        announce(error.message || '导入失败');
+      }
+    }
+    fileInput.value = '';
+    renderPendingImports();
+    setImportMessage(pendingImports.length ? '名称可以直接修改，确认后会加入全部作品。' : '没有可导入的 HTML 文件', pendingImports.length === 0);
+    importList.querySelector('input')?.focus();
+  }
+
+  async function confirmPendingImports() {
+    if (!pendingImports.length || pendingImports.some(item => !item.title.trim())) return;
+    confirmImportButton.disabled = true;
+    let completed = 0;
+    setImportMessage(`正在加入 ${pendingImports.length} 部作品...`);
+    for (const item of pendingImports) {
+      try {
+        const id = await contentId(item.html);
         const existing = uploads.get(id);
         const upload = {
           id,
-          title: extractTitle(html, file.name),
-          filename: file.name,
-          html,
-          size: file.size,
-          fileModified: file.lastModified || Date.now(),
+          title: item.title.trim(),
+          filename: item.file.name,
+          html: item.html,
+          size: item.file.size,
+          fileModified: item.file.lastModified || Date.now(),
           importedAt: existing?.importedAt || Date.now()
         };
         await storeUpload(upload);
         uploads.set(id, upload);
         completed += 1;
-        setImportMessage(`已处理 ${completed} / ${files.length}：${upload.title}`);
       } catch (error) {
-        setImportMessage(error.message || '导入失败', true);
         announce(error.message || '导入失败');
       }
     }
-    fileInput.value = '';
-    if (!completed) return;
+    if (!completed) {
+      confirmImportButton.disabled = false;
+      setImportMessage('作品加入失败，请重试。', true);
+      return;
+    }
     rebuildUploadCards();
-    activeFilter = 'uploaded';
+    activeFilter = 'all';
     render();
     importDialog.close();
     document.getElementById('collection').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    announce(`已加入 ${completed} 部本地作品`);
+    announce(`已将 ${completed} 部作品加入全部作品`);
   }
 
   function renderPlaybackButton() {
@@ -349,14 +410,16 @@
     }
     const emptyAction = event.target.closest('[data-empty-action]');
     if (emptyAction) {
-      if (emptyAction.dataset.action === 'import') openImportDialog();
-      else { activeFilter = 'all'; render(); document.querySelector('[data-filter="all"]').focus(); }
+      activeFilter = 'all';
+      render();
+      document.querySelector('[data-filter="all"]').focus();
     }
   });
 
   document.querySelectorAll('[data-open-import]').forEach(button => button.addEventListener('click', openImportDialog));
-  document.querySelector('[data-close-import]').addEventListener('click', () => importDialog.close());
-  fileInput.addEventListener('change', () => importFiles(fileInput.files));
+  document.querySelectorAll('[data-close-import]').forEach(button => button.addEventListener('click', () => importDialog.close()));
+  confirmImportButton.addEventListener('click', confirmPendingImports);
+  fileInput.addEventListener('change', () => stageFiles(fileInput.files));
   ['dragenter', 'dragover'].forEach(type => dropZone.addEventListener(type, event => {
     event.preventDefault();
     dropZone.classList.add('is-dragging');
@@ -365,8 +428,9 @@
     event.preventDefault();
     dropZone.classList.remove('is-dragging');
   }));
-  dropZone.addEventListener('drop', event => importFiles(event.dataTransfer.files));
+  dropZone.addEventListener('drop', event => stageFiles(event.dataTransfer.files));
   importDialog.addEventListener('click', event => { if (event.target === importDialog) importDialog.close(); });
+  importDialog.addEventListener('close', clearPendingImports);
 
   document.querySelector('[data-close-viewer]').addEventListener('click', closeUploadViewer);
   document.querySelector('[data-restart-upload]').addEventListener('click', () => {

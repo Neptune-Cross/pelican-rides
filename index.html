@@ -12,9 +12,9 @@
   <meta property="og:image" content="https://neptune-cross.github.io/pelican-rides/assets/coast.webp">
   <title>鹈鹕合集 · Pelican Rides</title>
   <link rel="icon" href="./assets/favicon.png" type="image/png">
-  <link rel="stylesheet" href="./collection.css?v=20260917-upload">
+  <link rel="stylesheet" href="./collection.css?v=20260917-merge">
   <script src="./assets/icons.js" defer></script>
-  <script src="./collection.js?v=20260917-upload" defer></script>
+  <script src="./collection.js?v=20260917-merge" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#collection">跳转到作品合集</a>
@@ -53,7 +53,6 @@
         <div class="collection-tools">
           <div class="filters" role="group" aria-label="作品筛选" hidden>
             <button type="button" class="filter active" data-filter="all" aria-pressed="true">全部作品 <span id="all-count">8</span></button>
-            <button type="button" class="filter" data-filter="uploaded" aria-pressed="false">我的上传 <span id="uploaded-count">0</span></button>
             <button type="button" class="filter" data-filter="saved" aria-pressed="false"><span data-icon="heart" aria-hidden="true"></span>我的收藏 <span id="saved-count">0</span></button>
           </div>
           <button type="button" class="import-button" data-open-import><span data-icon="file-up" aria-hidden="true"></span>导入 HTML</button>
@@ -163,15 +162,20 @@
   <dialog class="import-dialog" id="import-dialog" aria-labelledby="import-title">
     <div class="dialog-panel">
       <header class="dialog-header"><div><p class="eyebrow muted">LOCAL COLLECTION</p><h2 id="import-title">导入鹈鹕 HTML</h2></div><button class="icon-button" type="button" data-close-import aria-label="关闭导入窗口" title="关闭"><span data-icon="x" aria-hidden="true"></span></button></header>
-      <p class="dialog-copy">导入后会自动读取网页标题和文件时间，并加入你的合集。</p>
+      <p class="dialog-copy">选择文件后可以修改作品名称，确认后直接并入全部作品。</p>
       <label class="drop-zone" data-drop-zone>
         <input id="html-upload" type="file" accept=".html,.htm,text/html" multiple>
         <span data-icon="file-up" aria-hidden="true"></span>
         <strong>选择或拖入 HTML 文件</strong>
         <span>支持一次导入多个单文件作品，单个文件不超过 20 MB</span>
       </label>
+      <div class="import-list" id="import-list" aria-label="待导入作品" hidden></div>
       <div class="import-progress" id="import-progress" role="status" aria-live="polite"></div>
       <p class="storage-note"><span data-icon="hard-drive" aria-hidden="true"></span><span>作品仅保存在当前浏览器，不会上传到服务器或同步到其他设备。</span></p>
+      <div class="dialog-actions">
+        <button class="dialog-button secondary" type="button" data-close-import>取消</button>
+        <button class="dialog-button primary" type="button" data-confirm-import disabled>加入全部作品</button>
+      </div>
     </div>
   </dialog>
   <dialog class="upload-viewer" id="upload-viewer" aria-labelledby="upload-viewer-title">
