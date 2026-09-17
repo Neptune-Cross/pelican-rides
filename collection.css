@@ -72,13 +72,19 @@ h2 { font-size: 28px; line-height: 1.45; font-weight: 650; }
 .work-cover > a:hover img { transform: scale(1.04); }
 .upload-preview { width: 100%; height: 100%; border: 0; background: white; pointer-events: none; }
 .upload-open-cover { position: absolute; inset: 0; z-index: 1; width: 100%; border: 0; background: transparent; color: transparent; }
+.published-open-cover { position: absolute; inset: 0; z-index: 1; }
 .upload-open-cover:hover + .cover-enter, .upload-open-cover:focus-visible + .cover-enter { transform: scale(1.08); background: white; }
-.work-uploaded .work-label, .work-uploaded .save-button, .work-uploaded .cover-enter { z-index: 2; }
+.published-open-cover:hover + .cover-enter, .published-open-cover:focus-visible + .cover-enter { transform: scale(1.08); background: white; }
+.work-uploaded .work-label, .work-uploaded .save-button, .work-uploaded .cover-enter,
+.work-published .work-label, .work-published .save-button, .work-published .cover-enter { z-index: 2; }
 .work-uploaded .work-title { width: 100%; border: 0; background: transparent; color: inherit; text-align: left; cursor: pointer; }
 .work-uploaded .work-title:hover { color: var(--coral); }
 .remove-upload { display: inline-flex; align-items: center; gap: 6px; border: 0; background: transparent; color: #768075; padding: 4px 0; font-size: 10px; }
 .remove-upload:hover { color: var(--coral); }
 .remove-upload [data-icon] { width: 14px; height: 14px; }
+.copy-link { display: inline-flex; align-items: center; gap: 6px; border: 0; background: transparent; color: #768075; padding: 4px 0; font-size: 10px; }
+.copy-link:hover { color: var(--green); }
+.copy-link [data-icon] { width: 14px; height: 14px; }
 .work-label { position: absolute; top: 14px; left: 14px; display: inline-flex; align-items: center; gap: 6px; padding: 6px 9px; border-radius: 3px; background: #ffffffed; font-size: 10px; pointer-events: none; }
 .work-label [data-icon] { width: 13px; height: 13px; }
 .save-button { position: absolute; top: 12px; right: 12px; display: grid; place-items: center; width: 36px; height: 36px; border: 0; border-radius: 50%; background: #ffffffed; color: #4e6258; }
@@ -137,11 +143,22 @@ dialog::backdrop { background: #172b27a6; backdrop-filter: blur(3px); }
 .dialog-panel { max-height: calc(100svh - 32px); padding: 30px; overflow-y: auto; }
 .dialog-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; }
 .dialog-header h2 { margin-top: 7px; }
+.import-mode { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; margin-top: 24px; padding: 3px; border: 1px solid #cbd7d0; border-radius: 6px; background: #eef3f0; }
+.import-mode button { min-height: 39px; border: 0; border-radius: 4px; background: transparent; color: var(--muted); font-size: 12px; font-weight: 600; }
+.import-mode button.active { background: white; color: var(--green); box-shadow: 0 1px 4px #203b3614; }
 .icon-button { display: inline-grid; place-items: center; flex: 0 0 auto; width: 40px; height: 40px; border: 1px solid #ccd7d0; border-radius: 50%; background: transparent; color: var(--ink); }
 .icon-button:hover { background: #edf3ef; border-color: #9eb2a6; }
 .icon-button.danger:hover { color: #a4382b; border-color: #dba89f; background: #fff1ee; }
 .icon-button [data-icon] { width: 18px; height: 18px; }
 .dialog-copy { margin-top: 20px; color: var(--muted); font-size: 13px; line-height: 1.8; }
+.github-auth { display: grid; grid-template-columns: 1fr auto; gap: 8px 14px; margin-top: 16px; padding: 16px; border: 1px solid #cad8d0; border-radius: 6px; background: #f5f8f6; }
+.github-auth label { grid-column: 1 / -1; color: var(--ink); font-size: 11px; font-weight: 650; }
+.github-auth input { grid-column: 1 / -1; width: 100%; height: 42px; padding: 0 12px; border: 1px solid #acbdb3; border-radius: 4px; background: white; color: var(--ink); font: 12px ui-monospace, "Cascadia Code", monospace; }
+.github-auth input:focus { border-color: var(--green); outline: 2px solid #bcd9cc; outline-offset: 1px; }
+.github-auth p { color: var(--muted); font-size: 10px; line-height: 1.65; }
+.github-auth a { display: inline-flex; align-items: center; align-self: start; gap: 5px; color: var(--green); font-size: 10px; white-space: nowrap; }
+.github-auth a:hover { color: var(--coral); }
+.github-auth a [data-icon] { width: 13px; height: 13px; }
 .drop-zone { display: grid; place-items: center; min-height: 220px; margin-top: 20px; padding: 30px; border: 1px dashed #9fb8ac; border-radius: 7px; background: #f3f8f5; text-align: center; cursor: pointer; transition: border-color .18s, background .18s; }
 .drop-zone:hover, .drop-zone.is-dragging { border-color: var(--green); background: #e8f3ee; }
 .drop-zone input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
@@ -246,6 +263,8 @@ body:has(dialog[open]) { overflow: hidden; }
   .site-footer > p { order: 3; width: 100%; font-size: 10px; }
   .dialog-panel { padding: 22px; }
   .drop-zone { min-height: 190px; padding: 24px 14px; }
+  .github-auth { grid-template-columns: 1fr; }
+  .github-auth p, .github-auth a { grid-column: 1; }
   .import-item { grid-template-columns: 1fr; gap: 10px; }
   .dialog-actions { position: sticky; bottom: -22px; margin-inline: -22px; padding: 14px 22px 22px; background: var(--paper); }
   .upload-viewer-shell { grid-template-rows: auto minmax(0, 1fr); }
