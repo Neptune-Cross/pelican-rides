@@ -177,8 +177,8 @@
     try { detail = (await response.json()).message || ''; } catch { /* 使用状态码错误信息。 */ }
     const messages = {
       401: 'Token 无效或已过期',
-      403: 'Token 没有仓库 Contents 写入权限',
-      404: '找不到仓库，请确认 Token 已授权 pelican-rides',
+      403: 'Token 未选择 pelican-rides，或 Contents 不是 Read and write',
+      404: '找不到仓库，请确认 Repository access 已选择 pelican-rides',
       409: '仓库内容刚被更新，请重新发布',
       422: 'GitHub 拒绝了文件内容或路径'
     };

@@ -12,7 +12,7 @@
   <meta property="og:image" content="https://neptune-cross.github.io/pelican-rides/assets/coast.webp">
   <title>鹈鹕合集 · Pelican Rides</title>
   <link rel="icon" href="./assets/favicon.png" type="image/png">
-  <link rel="stylesheet" href="./collection.css?v=20260917-publish">
+  <link rel="stylesheet" href="./collection.css?v=20260917-token-guide">
   <script src="./assets/icons.js" defer></script>
   <script src="./collection.js?v=20260917-publish" defer></script>
 </head>
@@ -170,8 +170,11 @@
       <div class="github-auth" id="github-auth">
         <label for="github-token">GitHub 细粒度 Token</label>
         <input id="github-token" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="github_pat_...">
-        <p>仅需授权 <strong>Neptune-Cross/pelican-rides</strong> 的 Contents 读写权限。Token 只用于本次请求，不会保存。</p>
-        <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener noreferrer">创建 Token<span data-icon="arrow-up-right" aria-hidden="true"></span></a>
+        <ol class="token-checklist">
+          <li><strong>Repository access</strong> 选择 Only select repositories，再选择 <strong>pelican-rides</strong></li>
+          <li><strong>Repository permissions</strong> 中将 Contents 设为 <strong>Read and write</strong></li>
+        </ol>
+        <a href="https://github.com/settings/personal-access-tokens/new?name=Pelican+Publisher&amp;description=Publish+HTML+files+to+pelican-rides&amp;target_name=Neptune-Cross&amp;expires_in=30&amp;contents=write" target="_blank" rel="noopener noreferrer">按要求创建 Token<span data-icon="arrow-up-right" aria-hidden="true"></span></a>
       </div>
       <label class="drop-zone" data-drop-zone>
         <input id="html-upload" type="file" accept=".html,.htm,text/html" multiple>
