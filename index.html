@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="八段鹈鹕骑行旅程，收集海岸骑行、漫游记、破风骑行与按时间归档的鹈鹕测试。收藏你喜欢的风景。">
+  <meta name="description" content="鹈鹕骑行作品合集，可直接导入单文件 HTML，自动生成本地作品卡片并保存到当前浏览器。">
   <meta name="theme-color" content="#fdfefd">
   <meta property="og:title" content="鹈鹕合集 · Pelican Rides">
   <meta property="og:description" content="海风、旷野与自由。和鹈鹕一起，慢慢骑，慢慢看。">
@@ -12,9 +12,9 @@
   <meta property="og:image" content="https://neptune-cross.github.io/pelican-rides/assets/coast.webp">
   <title>鹈鹕合集 · Pelican Rides</title>
   <link rel="icon" href="./assets/favicon.png" type="image/png">
-  <link rel="stylesheet" href="./collection.css?v=20260912-sol">
+  <link rel="stylesheet" href="./collection.css?v=20260917-upload">
   <script src="./assets/icons.js" defer></script>
-  <script src="./collection.js?v=20260912-tests" defer></script>
+  <script src="./collection.js?v=20260917-upload" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#collection">跳转到作品合集</a>
@@ -24,7 +24,7 @@
         <span class="brand-mark" data-icon="bird" aria-hidden="true"></span>
         <span class="brand-type">鹈鹕合集<span>PELICAN RIDES</span></span>
       </a>
-      <nav class="primary-nav" aria-label="主导航"><a href="#collection">作品合集</a><a href="#about">关于合集</a></nav>
+      <nav class="primary-nav" aria-label="主导航"><a href="#collection">作品合集</a><button type="button" data-open-import>导入作品</button><a href="#about">关于合集</a></nav>
       <a class="random-link" href="./wander.html" data-random title="随机看一部作品" aria-label="随机看一部作品"><span data-icon="shuffle" aria-hidden="true"></span><span>随便逛逛</span></a>
     </div>
   </header>
@@ -50,9 +50,13 @@
     <section class="collection shell" id="collection" aria-labelledby="collection-title">
       <div class="section-heading">
         <div><p class="eyebrow muted">THE COLLECTION</p><h2 id="collection-title">每一程，都有好风景<span class="work-count">08</span></h2></div>
-        <div class="filters" role="group" aria-label="作品筛选" hidden>
-          <button type="button" class="filter active" data-filter="all" aria-pressed="true">全部作品 <span>8</span></button>
-          <button type="button" class="filter" data-filter="saved" aria-pressed="false"><span data-icon="heart" aria-hidden="true"></span>我的收藏 <span id="saved-count">0</span></button>
+        <div class="collection-tools">
+          <div class="filters" role="group" aria-label="作品筛选" hidden>
+            <button type="button" class="filter active" data-filter="all" aria-pressed="true">全部作品 <span id="all-count">8</span></button>
+            <button type="button" class="filter" data-filter="uploaded" aria-pressed="false">我的上传 <span id="uploaded-count">0</span></button>
+            <button type="button" class="filter" data-filter="saved" aria-pressed="false"><span data-icon="heart" aria-hidden="true"></span>我的收藏 <span id="saved-count">0</span></button>
+          </div>
+          <button type="button" class="import-button" data-open-import><span data-icon="file-up" aria-hidden="true"></span>导入 HTML</button>
         </div>
       </div>
       <div class="works-grid">
@@ -145,7 +149,7 @@
           <div class="work-footer"><span>创建时间</span><time datetime="2026-09-14T14:29:19+08:00">2026-09-14 14:29:19</time></div>
         </article>
       </div>
-      <div class="empty-state" hidden><span data-icon="heart" aria-hidden="true"></span><h3>还没有收藏的旅程</h3><button class="text-button" type="button" data-show-all>看看全部作品<span data-icon="arrow-right" aria-hidden="true"></span></button></div>
+      <div class="empty-state" hidden><span data-icon="heart" aria-hidden="true"></span><h3 id="empty-title">还没有收藏的旅程</h3><button class="text-button" type="button" data-empty-action>看看全部作品<span data-icon="arrow-right" aria-hidden="true"></span></button></div>
     </section>
     <section class="about" id="about" aria-labelledby="about-title">
       <div class="shell about-inner">
@@ -156,6 +160,35 @@
     </section>
   </main>
   <footer class="site-footer shell"><a class="footer-brand" href="./index.html">鹈鹕合集<span>PELICAN RIDES</span></a><p>慢慢骑，慢慢看。</p><a href="https://github.com/Neptune-Cross/pelican-rides" target="_blank" rel="noopener noreferrer" class="source-link">GitHub<span data-icon="arrow-up-right" aria-hidden="true"></span></a></footer>
+  <dialog class="import-dialog" id="import-dialog" aria-labelledby="import-title">
+    <div class="dialog-panel">
+      <header class="dialog-header"><div><p class="eyebrow muted">LOCAL COLLECTION</p><h2 id="import-title">导入鹈鹕 HTML</h2></div><button class="icon-button" type="button" data-close-import aria-label="关闭导入窗口" title="关闭"><span data-icon="x" aria-hidden="true"></span></button></header>
+      <p class="dialog-copy">导入后会自动读取网页标题和文件时间，并加入你的合集。</p>
+      <label class="drop-zone" data-drop-zone>
+        <input id="html-upload" type="file" accept=".html,.htm,text/html" multiple>
+        <span data-icon="file-up" aria-hidden="true"></span>
+        <strong>选择或拖入 HTML 文件</strong>
+        <span>支持一次导入多个单文件作品，单个文件不超过 20 MB</span>
+      </label>
+      <div class="import-progress" id="import-progress" role="status" aria-live="polite"></div>
+      <p class="storage-note"><span data-icon="hard-drive" aria-hidden="true"></span><span>作品仅保存在当前浏览器，不会上传到服务器或同步到其他设备。</span></p>
+    </div>
+  </dialog>
+  <dialog class="upload-viewer" id="upload-viewer" aria-labelledby="upload-viewer-title">
+    <div class="upload-viewer-shell">
+      <header class="upload-viewer-header">
+        <button class="viewer-action viewer-back" type="button" data-close-viewer><span data-icon="arrow-left" aria-hidden="true"></span><span>返回合集</span></button>
+        <h2 id="upload-viewer-title"></h2>
+        <div class="upload-viewer-actions">
+          <button class="icon-button" type="button" data-toggle-upload aria-label="暂停动画" title="暂停动画"><span data-icon="pause" aria-hidden="true"></span></button>
+          <button class="icon-button" type="button" data-restart-upload aria-label="重新播放" title="重新播放"><span data-icon="rotate-cw" aria-hidden="true"></span></button>
+          <button class="icon-button" type="button" data-download-upload aria-label="下载原文件" title="下载原文件"><span data-icon="download" aria-hidden="true"></span></button>
+          <button class="icon-button danger" type="button" data-delete-upload aria-label="删除作品" title="删除作品"><span data-icon="trash-2" aria-hidden="true"></span></button>
+        </div>
+      </header>
+      <iframe id="upload-frame" title="本地上传作品" sandbox="allow-scripts"></iframe>
+    </div>
+  </dialog>
   <p class="toast" role="status" aria-live="polite" aria-atomic="true"></p>
 </body>
 </html>
